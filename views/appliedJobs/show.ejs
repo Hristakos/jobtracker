@@ -1,0 +1,111 @@
+<%- include('../header.ejs')%>
+<div id="applied-jobs-wrapper">
+  <table id="applied-jobs" class="table table-striped table-bordered" style="width: 100%;">
+    <thead>
+      <tr>
+        <th>Job ID</th>
+        <th>Company Name</th>
+        <th>Role</th>
+        <th>Contact Person</th>
+        <th>Date of Application</th>
+        <th>Follow-up Date</th>
+        <th>Interview Date</th>
+        <th>Remarks</th>
+        <th></th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <% if(savedJobs.length > 0){ for(var i = 0;i < savedJobs.length;i++) { %>
+        <td><%=savedJobs[i].id%></td>
+        <td><%=savedJobs[i].company%></td>
+        <td><a href="#" data-toggle="modal" data-target="#myModal<%=i%>">
+            <%=savedJobs[i].title%>
+          </a></td>
+        <td><%=savedJobs[i].contactperson%></td>
+        <td><%=savedJobs[i].applicationdate%></td>
+        <td><%=savedJobs[i].followupdate%></td>
+        <td><%=savedJobs[i].interviewdate%></td>
+        <td><%=savedJobs[i].remarks%></td>
+        <td><a href="/appliedJobs/<%=savedJobs[i].api_id%>" class="btn btn-warning">Edit</a></td>
+        <td>
+          <form class="form-horizontal" action="/appliedJobs/delete/<%=savedJobs[i].api_id%>" method="POST">
+            <input name="_method" type="hidden" value="DELETE">
+            <button type="submit" onclick="return handleDeleteButton()"
+              class="btn btn-danger delete-btn">Delete</button>
+          </form>
+        </td>
+      </tr>
+      <%}}%>
+    </tbody>
+    <tfoot>
+      <tr>
+        <th>Job ID</th>
+        <th>Company Name</th>
+        <th>Role</th>
+        <th>Contact Person</th>
+        <th>Date of Application</th>
+        <th>Follow-up Date</th>
+        <th>Interview Date</th>
+        <th>Remarks</th>
+        <th></th>
+        <th></th>
+      </tr>
+    </tfoot>
+  </table>
+</div>
+
+<!-- Trigger the modal with a button -->
+<!-- <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal<%=i%>" data-index=`1`>
+  View Job Description
+</button> -->
+<% if(savedJobs.length > 0){ for(var i = 0;i < savedJobs.length;i++) { %>
+<!-- Modal -->
+<div class="modal fade" id="myModal<%=i%>" role="dialog">
+  <div class="modal-dialog modal-lg">
+    <div stylyt="background-image: url(<%-`{savedJobs[i].company_logo}`%>);" class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">
+          &times;
+        </button>
+        <h2 class="modal-title">
+          <%=`${savedJobs[i].company}, ${savedJobs[i].location} -
+              ${savedJobs[i].title} (${savedJobs[i].type}) `%>
+        </h2>
+      </div>
+      <div class="modal-body">
+        <p><%-`${savedJobs[i].description} `%></p>
+        <p>
+          <span class="modal-span">How To Apply:</span> <%-savedJobs[i].how_to_apply%> Company URL:
+          <a href="<%=savedJobs[i].company_url%>"><%=savedJobs[i].company_url%></a>
+          <!-- <img src="<%-savedJobs[i].company_logo%>" alt=""> -->
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+<%}}%>
+<script>
+  const handleDeleteButton = function myConfirm(event) {
+    var result = confirm("Confirm to delete?");
+    if (result == true) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+  // Basic example
+  $(document).ready(function () {
+    $("#applied-jobs").DataTable({
+      pagingType: "full_numbers",
+    });
+  });
+</script>
+<%- include('../footer.ejs')%>
